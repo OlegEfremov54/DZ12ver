@@ -16,62 +16,83 @@
         tools:ignore="MissingConstraints"
         />
 
+    <TextView
+        android:id="@+id/titleProductTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Страница продукта"
+        android:textColor="@color/red"
+        android:textSize="26sp"
+
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarDetals"
+        tools:layout_editor_absoluteX="0dp" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/editImageIV"
         android:layout_width="301dp"
         android:layout_height="227dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:src="@drawable/baseline_shopping_cart_checkout_24"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarDetals"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="55dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleProductTV"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/productNameET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="28dp"
         android:hint="@string/text_view_name_product"
         android:textSize="22sp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editImageIV"
-        tools:layout_editor_absoluteX="73dp"
         tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/productPriceET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="28dp"
         android:hint="@string/text_view_price_product"
+        android:background="@color/white"
         android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/productNameET"
-        tools:layout_editor_absoluteX="125dp"
         tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/productInfoET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="16dp"
         android:hint="Информация о продукте"
         android:textSize="22sp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/productPriceET"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="75dp" />
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/reversBTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="36dp"
         android:backgroundTint="@color/blue"
         android:text="Возврат"
         android:textSize="24sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/productInfoET"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="134dp" />
+        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,6 +36,7 @@ class ActivityShop : AppCompatActivity(), Removable, Updatable {
     private lateinit var editImageIV: ImageView
     private lateinit var productNameET: EditText
     private lateinit var productPriceET: EditText
+    private lateinit var productInfo:EditText
     private lateinit var addBTN: Button
 
     private lateinit var listViewLV: ListView
@@ -83,7 +84,8 @@ class ActivityShop : AppCompatActivity(), Removable, Updatable {
             val name = productNameET.text.toString()
             val price = productPriceET.text.toString()
             val image = fotoUri.toString()
-            val product = Product(name, price, image)
+            val productInfo = null
+            val product = Product(name, price, image,productInfo)
             productViewModel.addProduct(product)
             listAdapter = ListAdapter(this@ActivityShop, productViewModel.products)
             listViewLV.adapter = listAdapter
@@ -123,6 +125,17 @@ class ActivityShop : AppCompatActivity(), Removable, Updatable {
 
         listViewLV = findViewById(R.id.listViewLV)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        chek = intent.extras?.getBoolean("newChek") ?: true
+        if (!chek) {
+            productViewModel.products = intent.getSerializableExtra("list") as MutableList<Product>
+            listAdapter = ListAdapter(this, productViewModel.products)
+            chek = true
+        }
+        listViewLV.adapter = listAdapter
     }
 
     override fun remove(product: Product) {

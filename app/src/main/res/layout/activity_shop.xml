@@ -41,14 +41,18 @@
                 android:id="@+id/productNameET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/red"
                 android:hint="@string/text_view_name_product"
+                android:background="@color/white"
                 android:textSize="22sp" />
 
             <EditText
                 android:id="@+id/productPriceET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/blue"
                 android:hint="@string/text_view_price_product"
+                android:background="@color/white"
                 android:textSize="22sp" />
 
         </LinearLayout>

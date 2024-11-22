@@ -48,6 +48,13 @@
                     android:hint="@string/text_view_price_product"
                     android:textSize="20sp" />
 
+                <TextView
+                    android:id="@+id/productInfoTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Информация о продукте"
+                    android:textSize="20sp" />
+
             </LinearLayout>
 
         </LinearLayout>

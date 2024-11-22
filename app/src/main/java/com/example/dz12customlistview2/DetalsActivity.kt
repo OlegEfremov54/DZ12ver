@@ -1,5 +1,7 @@
 package com.example.dz12customlistview2
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +12,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
@@ -21,54 +25,93 @@ class DetalsActivity : AppCompatActivity() {
     private lateinit var productNameET: EditText
     private lateinit var productPriceET: EditText
     private lateinit var reversBTN: Button
-    var product:Product? = null
-    private lateinit var productViewModel: ProductViewModel
-    var item: Int? = null
+    private lateinit var productInfoET: EditText
 
+    private lateinit var photoPickerLauncher: ActivityResultLauncher<Intent>
+    private var fotoUri: Uri? = null
+    private var product: Product? = null
+    private lateinit var products: MutableList<Product>
+    private var item: Int = 0
+    private var chek: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_detals)
+
+        // Настройка окна
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // Настройка Toolbar
         toolbarDetals = findViewById(R.id.toolbarDetals)
         setSupportActionBar(toolbarDetals)
         title = " Магазин продуктов"
         toolbarDetals.subtitle = "  Версия 2. Страница Продукта"
         toolbarDetals.setLogo(R.drawable.shop)
 
+        // Инициализация Views
         editImageIV = findViewById(R.id.editImageIV)
         productNameET = findViewById(R.id.productNameET)
         productPriceET = findViewById(R.id.productPriceET)
         reversBTN = findViewById(R.id.reversBTN)
+        productInfoET = findViewById(R.id.productInfoET)
 
-        product = intent.extras?.getSerializable("product") as Product
-        val products = intent.getSerializableExtra("products")
-        val item = intent.extras?.getInt("pozitions")
-        val chek = intent.extras?.getBoolean("chek")
+        // Получение данных из Intent
+        product = intent.extras?.getSerializable("product") as? Product
+        products = intent.getSerializableExtra("products") as? ArrayList<Product> ?: arrayListOf()
+        item = intent.getIntExtra("pozitions", 0)
+        chek = intent.getBooleanExtra("chek", false)
 
-        val image:Uri = Uri.parse(product!!.image)
-        val name = product!!.name
-        val price = product?.price
+        // Заполнение данных продукта
+        product?.let {
+            productNameET.setText(it.name)
+            productPriceET.setText(it.price)
+            productInfoET.setText(it.productInfo)
+            val imageUri = Uri.parse(it.image)
+            editImageIV.setImageURI(imageUri)
+        }
 
-        productNameET.setText(name)
-        productPriceET.setText(price)
-        editImageIV.setImageURI(image)
+        // Настройка выбора изображения
+        photoPickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                fotoUri = result.data?.data
+                editImageIV.setImageURI(fotoUri)
+            }
+        }
 
+        editImageIV.setOnClickListener {
+            val photoPickerIntent = Intent(Intent.ACTION_PICK).apply { type = "image/*" }
+            photoPickerLauncher.launch(photoPickerIntent)
+        }
 
-
-
+        // Кнопка сохранения и возвращения
         reversBTN.setOnClickListener {
-            val intent = Intent(this, ActivityShop::class.java)
+            val updatedProduct = Product(
+                name = productNameET.text.toString(),
+                price = productPriceET.text.toString(),
+                image = fotoUri?.toString() ?: product?.image ?: "",
+                productInfo = productInfoET.text.toString()
+            )
+
+            if (item in products.indices) {
+                swap(item, updatedProduct, products)
+            }
+            val intent = Intent(this, ActivityShop::class.java).apply {
+                putExtra("list", ArrayList(products))
+                putExtra("newChek", false)
+            }
             startActivity(intent)
             finish()
         }
+    }
 
+    // Swap-функция
+    private fun swap(item: Int, product: Product, products: MutableList<Product>) {
+        products[item] = product
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -96,4 +139,3 @@ class DetalsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 }
-
