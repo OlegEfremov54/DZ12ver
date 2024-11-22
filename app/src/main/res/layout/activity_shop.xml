@@ -41,7 +41,7 @@
                 android:id="@+id/productNameET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/red"
+                android:textColor="@color/blue"
                 android:hint="@string/text_view_name_product"
                 android:background="@color/white"
                 android:textSize="22sp" />
