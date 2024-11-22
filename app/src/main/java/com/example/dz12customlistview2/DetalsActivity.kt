@@ -1,6 +1,7 @@
 package com.example.dz12customlistview2
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -46,7 +47,18 @@ class DetalsActivity : AppCompatActivity() {
         productPriceET = findViewById(R.id.productPriceET)
         reversBTN = findViewById(R.id.reversBTN)
 
-        product = intent.getStringExtra("product")
+        product = intent.extras?.getSerializable("product") as Product
+        val products = intent.getSerializableExtra("products")
+        val item = intent.extras?.getInt("pozitions")
+        val chek = intent.extras?.getBoolean("chek")
+
+        val image:Uri = Uri.parse(product!!.image)
+        val name = product!!.name
+        val price = product?.price
+
+        productNameET.setText(name)
+        productPriceET.setText(price)
+        editImageIV.setImageURI(image)
 
 
 
@@ -54,6 +66,7 @@ class DetalsActivity : AppCompatActivity() {
         reversBTN.setOnClickListener {
             val intent = Intent(this, ActivityShop::class.java)
             startActivity(intent)
+            finish()
         }
 
     }
