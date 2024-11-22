@@ -22,10 +22,12 @@ class ListAdapter (context: Context, productList: MutableList<Product>): ArrayAd
         val imageViewIV = view?.findViewById<ImageView>(R.id.imageViewIV)
         val productNameTV = view?.findViewById<TextView>(R.id.productNameTV)
         val productPriceTV = view?.findViewById<TextView>(R.id.productPriceTV)
+        val productInfoTV = view?.findViewById<TextView>(R.id.productInfoTV)
 
         imageViewIV?.setImageURI(Uri.parse(product?.image))
         productNameTV?.text = product?.name
         productPriceTV?.text = product?.price
+        productInfoTV?.text = product?.productInfo
 
         return view!!
     }

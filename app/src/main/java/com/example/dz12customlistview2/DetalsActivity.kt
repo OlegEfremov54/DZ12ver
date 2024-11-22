@@ -1,5 +1,6 @@
 package com.example.dz12customlistview2
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +11,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
@@ -21,10 +24,13 @@ class DetalsActivity : AppCompatActivity() {
     private lateinit var productNameET: EditText
     private lateinit var productPriceET: EditText
     private lateinit var reversBTN: Button
+    private lateinit var productInfoET:EditText
     var product:Product? = null
+    var products: MutableList<Product> = mutableListOf()
     private lateinit var productViewModel: ProductViewModel
     var item: Int? = null
-
+    private lateinit var photoPickerLauncher: ActivityResultLauncher<Intent>
+    var fotoUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,30 +52,64 @@ class DetalsActivity : AppCompatActivity() {
         productNameET = findViewById(R.id.productNameET)
         productPriceET = findViewById(R.id.productPriceET)
         reversBTN = findViewById(R.id.reversBTN)
+        productInfoET=findViewById(R.id.productInfoET)
 
         product = intent.extras?.getSerializable("product") as Product
-        val products = intent.getSerializableExtra("products")
+        var products = intent.getStringExtra("products")
         val item = intent.extras?.getInt("pozitions")
         val chek = intent.extras?.getBoolean("chek")
 
         val image:Uri = Uri.parse(product!!.image)
         val name = product!!.name
         val price = product?.price
+        val info = product?.productInfo
 
         productNameET.setText(name)
         productPriceET.setText(price)
         editImageIV.setImageURI(image)
+        productInfoET.setText(info)
 
-
-
-
-        reversBTN.setOnClickListener {
-            val intent = Intent(this, ActivityShop::class.java)
-            startActivity(intent)
-            finish()
+        photoPickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                fotoUri = result.data?.data  // selectedImage для загрузки изображения
+                editImageIV.setImageURI(fotoUri)
+            }
         }
 
+        editImageIV.setOnClickListener {
+            val photoPickerIntent = Intent(Intent.ACTION_PICK)
+            photoPickerIntent.type = "image/*"
+            photoPickerLauncher.launch(photoPickerIntent)
+        }
+
+
+          reversBTN.setOnClickListener {
+            val product:Product(
+                productNameET.text.toString(),
+                productPriceET.text.toString(),
+                fotoUri.toString(),
+                productInfoET.text.toString()
+            )
+            val list:MutableList<Product> = products as MutableList<Product>
+            if(item!=0){
+                swap(item,product,products)
+            }
+            chek=false
+            val intent = Intent(this, ActivityShop::class.java)
+              intent.putExtra("list",list as ArrayList<Product>)
+              intent.putExtra("newChek", chek)
+            startActivity(intent)
+            finish()
+          }
+
     }
+
+   fun swap(item:Int,product: Product,products: MutableList<Product> ){
+        products.add(item+1,product)
+        products.removeAt(item)
+    }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
