@@ -30,7 +30,7 @@ class DetalsActivity : AppCompatActivity() {
     private var fotoUri: Uri? = null
     private var product: Product? = null
     private lateinit var products: MutableList<Product>
-    private var item: Int = 0
+    private var item: Int? = 0
     private var chek: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +61,7 @@ class DetalsActivity : AppCompatActivity() {
 // Получение данных из Intent
         product = intent.extras?.getSerializable("product") as? Product
         products = intent.getSerializableExtra("products") as? ArrayList<Product> ?: arrayListOf()
-        item = intent.getIntExtra("pozitions", 0)
+        item = intent.extras?.getInt("positions")!!
         chek = intent.getBooleanExtra("chek", false)
 
         // Заполнение данных продукта
@@ -94,7 +94,6 @@ class DetalsActivity : AppCompatActivity() {
                 image = fotoUri?.toString() ?: product?.image ?: "",
                 productInfo = productInfoET.text.toString()
             )
-
             if (item in products.indices) {
                 swap(item, updatedProduct, products)
             }
@@ -108,8 +107,9 @@ class DetalsActivity : AppCompatActivity() {
     }
 
     // Swap-функция
-    private fun swap(item: Int, product: Product, products: MutableList<Product>) {
-        products[item] = product
+    private fun swap(item: Int?, product: Product, products: MutableList<Product>) {
+        products.add(item!! + 1, product)
+        products.removeAt(item!!)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
